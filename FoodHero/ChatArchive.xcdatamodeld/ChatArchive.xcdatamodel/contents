@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15B42" minimumToolsVersion="Xcode 7.0">
+    <entity name="Chat" syncable="YES">
+        <attribute name="endtime" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="roomname" attributeType="String" syncable="YES"/>
+        <attribute name="visited" optional="YES" attributeType="Date" syncable="YES"/>
+        <relationship name="chatToMsg" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Message" inverseName="msgToChat" inverseEntity="Message" syncable="YES"/>
+    </entity>
+    <entity name="Message" syncable="YES">
+        <attribute name="body" attributeType="String" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="from" attributeType="String" syncable="YES"/>
+        <relationship name="msgToChat" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Chat" inverseName="chatToMsg" inverseEntity="Chat" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Chat" positionX="-45" positionY="0" width="128" height="120"/>
+        <element name="Message" positionX="126" positionY="45" width="128" height="103"/>
+    </elements>
+</model>
