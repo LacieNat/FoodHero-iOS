@@ -66,38 +66,27 @@
                         <sections>
                             <tableViewSection id="oHb-kC-v90">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="218" id="KnD-GA-rCc">
-                                        <rect key="frame" x="0.0" y="64" width="600" height="218"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="320" id="KnD-GA-rCc">
+                                        <rect key="frame" x="0.0" y="64" width="600" height="320"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KnD-GA-rCc" id="8Ae-Nc-j0K">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="217.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="319.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" restorationIdentifier="imgScrollView" alwaysBounceHorizontal="YES" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wPu-rB-V7x">
-                                                    <rect key="frame" x="0.0" y="0.0" width="600" height="217.5"/>
-                                                    <subviews>
-                                                        <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1m1-Nu-o1d">
-                                                            <rect key="frame" x="0.0" y="0.0" width="600" height="217.5"/>
-                                                        </imageView>
-                                                    </subviews>
-                                                    <constraints>
-                                                        <constraint firstItem="1m1-Nu-o1d" firstAttribute="leading" secondItem="wPu-rB-V7x" secondAttribute="leading" id="24v-vY-GiS"/>
-                                                        <constraint firstAttribute="bottom" secondItem="1m1-Nu-o1d" secondAttribute="bottom" id="AQz-m9-hcv"/>
-                                                        <constraint firstItem="1m1-Nu-o1d" firstAttribute="top" secondItem="wPu-rB-V7x" secondAttribute="top" id="D0e-0V-f7h"/>
-                                                        <constraint firstAttribute="trailing" secondItem="1m1-Nu-o1d" secondAttribute="trailing" id="rWb-yB-iMQ"/>
-                                                    </constraints>
+                                                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" restorationIdentifier="imgScrollView" alwaysBounceHorizontal="YES" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wPu-rB-V7x">
+                                                    <rect key="frame" x="0.0" y="0.0" width="600" height="319.5"/>
                                                 </scrollView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="wPu-rB-V7x" firstAttribute="leading" secondItem="8Ae-Nc-j0K" secondAttribute="leadingMargin" constant="-8" id="3oc-x2-tHx"/>
-                                                <constraint firstItem="wPu-rB-V7x" firstAttribute="top" secondItem="8Ae-Nc-j0K" secondAttribute="topMargin" constant="-8" id="F7C-j4-FfQ"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="wPu-rB-V7x" secondAttribute="bottom" constant="-8" id="hmA-bZ-7pG"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="wPu-rB-V7x" secondAttribute="trailing" constant="-8" id="wSi-rL-4xN"/>
+                                                <constraint firstAttribute="trailing" secondItem="wPu-rB-V7x" secondAttribute="trailing" id="6wk-YF-Rvt"/>
+                                                <constraint firstAttribute="bottom" secondItem="wPu-rB-V7x" secondAttribute="bottom" id="ASM-dl-h2j"/>
+                                                <constraint firstItem="wPu-rB-V7x" firstAttribute="leading" secondItem="8Ae-Nc-j0K" secondAttribute="leading" id="ESW-Od-IdM"/>
+                                                <constraint firstItem="wPu-rB-V7x" firstAttribute="top" secondItem="8Ae-Nc-j0K" secondAttribute="top" id="TD0-La-Urx"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="95" id="YPU-BR-Wp4">
-                                        <rect key="frame" x="0.0" y="282" width="600" height="95"/>
+                                        <rect key="frame" x="0.0" y="384" width="600" height="95"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="YPU-BR-Wp4" id="oGb-SR-3zP">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="94.5"/>
@@ -113,7 +102,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="65" id="ONs-GU-TbW">
-                                        <rect key="frame" x="0.0" y="377" width="600" height="65"/>
+                                        <rect key="frame" x="0.0" y="479" width="600" height="65"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ONs-GU-TbW" id="A2M-ev-WY4">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="64.5"/>
@@ -121,7 +110,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="268" id="QlM-0n-aks">
-                                        <rect key="frame" x="0.0" y="442" width="600" height="268"/>
+                                        <rect key="frame" x="0.0" y="544" width="600" height="268"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="QlM-0n-aks" id="IdH-yM-7bs">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="267.5"/>
@@ -152,7 +141,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="65" id="grI-y6-Lhh">
-                                        <rect key="frame" x="0.0" y="710" width="600" height="65"/>
+                                        <rect key="frame" x="0.0" y="812" width="600" height="65"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="grI-y6-Lhh" id="OFK-Qu-58t">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="64.5"/>
@@ -186,7 +175,6 @@
                     <connections>
                         <outlet property="additionalInfo" destination="RyI-9T-Yte" id="DNL-9F-w5k"/>
                         <outlet property="eventname" destination="T34-5V-qZo" id="uTc-nC-9fG"/>
-                        <outlet property="foodImg" destination="1m1-Nu-o1d" id="UW5-K4-90G"/>
                         <outlet property="imgScrollView" destination="wPu-rB-V7x" id="9m0-NR-eXP"/>
                         <outlet property="location" destination="SwM-Jc-vdr" id="GHp-0O-RH2"/>
                         <outlet property="user" destination="lW8-qd-gsa" id="CmP-NV-Au0"/>
