@@ -30,6 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, XMPPStreamDelegate{
     var xmppRoster: XMPPRoster
     var host:String = "http://foodhero.me:8000"
     var devTok:String? = nil
+    var notifSecret:String? = nil
     
     
     
@@ -44,15 +45,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, XMPPStreamDelegate{
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
         
         devTok = deviceToken.description.substringWithRange(Range<String.Index>(start:deviceToken.description.startIndex.advancedBy(1), end: deviceToken.description.endIndex.advancedBy(-1)))
+        //devTok = devTok?.stringByReplacingOccurrencesOfString(" ", withString: "")
         print("DEVICE TOKEN = \(devTok)")
         
         //enableNotif()
-        //registerNotif()
+        registerNotif()
         //serviceRequest()
     }
     
     func serviceRequest() {
-        let t = XMPPIQ(type: "get", to: XMPPJID.jidWithString("adm@foodhero.me"), elementID: xmppStream.generateUUID())
+        let t = XMPPIQ(type: "get", to: XMPPJID.jidWithString("lacie@foodhero.me"), elementID: xmppStream.generateUUID())
         let q = DDXMLElement.elementWithName("query")
         q.setXmlns("http://jabber.org/protocol/disco#info")
         t.addChild(q as! DDXMLNode)
@@ -60,21 +62,41 @@ class AppDelegate: UIResponder, UIApplicationDelegate, XMPPStreamDelegate{
         xmppStream.sendElement(t)
     }
     
-    func enableNotif() {
+    func enableNotif(node:String) {
         let notifIq = XMPPIQ(type: "set")
         
         let enable = DDXMLElement.elementWithName("enable")
         enable.setXmlns("urn:xmpp:push:0")
-        enable.addAttributeWithName("node", stringValue: "event5")
+        enable.addAttributeWithName("node", stringValue: node)
         enable.addAttributeWithName("jid", stringValue: "pubsub.foodhero.me")
         
+        let xData = DDXMLElement.elementWithName("x")
+        xData.setXmlns("jabber:x:data")
+        xData.addAttributeWithName("type", stringValue: "submit")
+        
+        let formTypeField = DDXMLElement.elementWithName("field")
+        formTypeField.addAttributeWithName("var", stringValue: "FORM_TYPE")
+        
+        let formTypeValue = DDXMLElement.elementWithName("value", stringValue: "http://jabber.org/protocol/pubsub#publish-options")
+        
+        let secretField = DDXMLElement.elementWithName("field")
+        secretField.addAttributeWithName("var", stringValue: "secret")
+        
+        let secretValue = DDXMLElement.elementWithName("value", stringValue: notifSecret)
+        
+        formTypeField.addChild(formTypeValue as! DDXMLNode)
+        secretField.addChild(secretValue as! DDXMLNode)
+        
+        xData.addChild(formTypeField as! DDXMLNode)
+        xData.addChild(secretField as! DDXMLNode)
+        enable.addChild(xData as! DDXMLNode)
         notifIq.addChild(enable as! DDXMLNode)
         
         xmppStream.sendElement(notifIq)
     }
     
     func registerNotif() {
-        let notifIq = XMPPIQ(type: "set", to: XMPPJID.jidWithString("register.foodhero.me"), elementID: xmppStream.generateUUID())
+        let notifIq = XMPPIQ(type: "set", to: XMPPJID.jidWithString("foodhero.me"), elementID: xmppStream.generateUUID())
         
         let command = DDXMLElement.elementWithName("command")
         command.addAttributeWithName("node", stringValue: "register-push-apns")
@@ -155,7 +177,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, XMPPStreamDelegate{
     }
 
     func applicationDidBecomeActive(application: UIApplication) {
-        connect()
+        //connect()
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         
     }
@@ -272,19 +294,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, XMPPStreamDelegate{
     }
     
     func xmppStream(sender: XMPPStream!, didReceiveIQ iq: XMPPIQ!) -> Bool {
-        print("Did receive IQ")
-        print(iq.description)
+//        print("Did receive IQ")
+//        print(iq.description)
+//        
+//        if(iq.from().bare() == "foodhero.me") {
+//            notifSecret = iq.childElement().childAtIndex(0).childAtIndex(2).childAtIndex(0).stringValue()
+//        }
         
         return false
     }
     
     func xmppStream(sender: XMPPStream!, didReceiveMessage message: XMPPMessage!) {
-        
-        print("Did receive message \(message)")
+//        
+//        print("Did receive message \(message)")
     }
     
     func xmppStream(sender: XMPPStream!, didSendMessage message: XMPPMessage!) {
-        print("Did send message \(message)")
+//        print("Did send message \(message)")
     }
     
     func xmppStream(sender: XMPPStream!, didReceivePresence presence: XMPPPresence!) {

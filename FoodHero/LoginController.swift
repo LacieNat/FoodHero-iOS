@@ -12,11 +12,10 @@ import FBSDKLoginKit
 import FBSDKCoreKit
 import Google
 import XMPPFramework
+import Alamofire
 
 class LoginController:UIViewController, FBSDKLoginButtonDelegate, GIDSignInDelegate, GIDSignInUIDelegate{
     @IBOutlet weak var btnFacebook: FBSDKLoginButton!
-    @IBOutlet weak var ivUserProfileImage: UIImageView!
-    @IBOutlet weak var lblName: UILabel!
     @IBOutlet weak var btnGoogle: GIDSignInButton!
     @IBOutlet weak var loginTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
@@ -28,6 +27,8 @@ class LoginController:UIViewController, FBSDKLoginButtonDelegate, GIDSignInDeleg
         super.viewDidLoad()
         configureFacebook()
         configureGoogle()
+        
+        
     }
     
     func configureFacebook()
@@ -47,15 +48,19 @@ class LoginController:UIViewController, FBSDKLoginButtonDelegate, GIDSignInDeleg
     func signIn(signIn: GIDSignIn!, didSignInForUser user: GIDGoogleUser!,
                 withError error: NSError!) {
         if (error == nil) {
-            // Perform any operations on signed in user here.
+            
+            LoadingOverlay.shared.showOverlay(self.view)
+            
             let userId = user.userID                  // For client-side use only!
             let idToken = user.authentication.idToken // Safe to send to the server
             let fullName = user.profile.name
             let givenName = user.profile.givenName
             let familyName = user.profile.familyName
             let email = user.profile.email
-            
-            performSegueWithIdentifier("loginSuccessSegue", sender: self)
+            let accessToken = user.authentication.accessToken
+
+            loginGoogle(accessToken, token: idToken, email: email)
+
         } else {
             print("\(error.localizedDescription)")
         }
@@ -69,67 +74,90 @@ class LoginController:UIViewController, FBSDKLoginButtonDelegate, GIDSignInDeleg
     
     func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!)
     {
-        print("test")
-        FBSDKGraphRequest.init(graphPath: "me", parameters: ["fields":"first_name, last_name, picture.type(large)"]).startWithCompletionHandler { (connection, result, error) -> Void in
-            let strFirstName: String = (result.objectForKey("first_name") as? String)!
-            let strLastName: String = (result.objectForKey("last_name") as? String)!
-            let strPictureURL: String = (result.objectForKey("picture")?.objectForKey("data")?.objectForKey("url") as? String)!
-            self.lblName.text = "Welcome, \(strFirstName) \(strLastName)"
-            self.ivUserProfileImage.image = UIImage(data: NSData(contentsOfURL: NSURL(string: strPictureURL)!)!)
+        LoadingOverlay.shared.showOverlay(self.view)
+        
+        if(!result.isCancelled) {
+        FBSDKGraphRequest.init(graphPath: "me", parameters: ["fields":"id, third_party_id, first_name, last_name, picture.type(large)"]).startWithCompletionHandler { (connection, result, error) -> Void in
+
+            if(FBSDKAccessToken.currentAccessToken() != nil) {
+                self.loginFacebook(result.objectForKey("id") as! String, third_party_id: result.objectForKey("third_party_id") as! String, token: FBSDKAccessToken.currentAccessToken().tokenString)
+                }
+//            self.ivUserProfileImage.image = UIImage(data: NSData(contentsOfURL: NSURL(string: strPictureURL)!)!)
             }
+        }
     }
     
     func loginButtonDidLogOut(loginButton: FBSDKLoginButton!)
     {
         let loginManager: FBSDKLoginManager = FBSDKLoginManager()
         loginManager.logOut()
-        ivUserProfileImage.image = nil
-        lblName.text = ""
     }
     
     @IBAction func exitRegister(segue:UIStoryboardSegue) {
     }
     
     @IBAction func login(sender: AnyObject) {
+        LoadingOverlay.shared.showOverlay(self.view)
+        
         NSUserDefaults.standardUserDefaults().setObject(loginTextField.text!, forKey: "userID")
         NSUserDefaults.standardUserDefaults().setObject(passwordTextField.text!, forKey: "userPassword")
         
-       let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        
-        let params = ["username": loginTextField.text!, "password": passwordTextField.text!] as Dictionary<String, String>
-        let request = NSMutableURLRequest(URL: NSURL(string: appDelegate.host + "/login")!)
-        let session = NSURLSession.sharedSession()
-        
-        request.HTTPMethod = "POST"
-        request.HTTPBody = try? NSJSONSerialization.dataWithJSONObject(params, options: [])
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        var ch:(NSData?, NSURLResponse?, NSError?)->Void = {(data, response, error) in
-            
-            if(error != nil) {
-                self.alertError(error)
-                return
-            }
-            
-            var strData = NSString(data: data!, encoding: NSUTF8StringEncoding)
-            print(strData)
-            var json = try? NSJSONSerialization.JSONObjectWithData(data!, options: []) as? NSDictionary
-        
-            if json != nil && appDelegate.connect() && json!!["token"] != nil && json!!["mealsShared"] != nil && json!!["mealsSaved"] != nil{
-                print(json!!["mealsShared"])
-                NSUserDefaults.standardUserDefaults().setObject(json!!["token"], forKey: "authToken")
-                NSUserDefaults.standardUserDefaults().setObject(json!!["mealsSaved"]?.description, forKey: "mealsSaved")
-                NSUserDefaults.standardUserDefaults().setObject(json!!["mealsShared"]?.description, forKey: "mealsShared")
-                NSOperationQueue.mainQueue().addOperationWithBlock({
-                    self.performSegueWithIdentifier("loginSuccessSegue", sender: self)
-                })
-
+        Alamofire.request(.POST, appDelegate.host + "/login", parameters: ["username": loginTextField.text!, "password": passwordTextField.text!])
+        .validate().responseJSON { (res) in
+            if let json = res.result.value {
+                if self.appDelegate.connect() && json["token"] != nil && json["mealsShared"] != nil && json["mealsSaved"] != nil{
+                    NSUserDefaults.standardUserDefaults().setObject(json["token"], forKey: "authToken")
+                    NSUserDefaults.standardUserDefaults().setObject(json["mealsSaved"]!!.description, forKey: "mealsSaved")
+                    NSUserDefaults.standardUserDefaults().setObject(json["mealsShared"]!!.description, forKey: "mealsShared")
+                    NSOperationQueue.mainQueue().addOperationWithBlock({
+                        LoadingOverlay.shared.hideOverlayView()
+                        self.performSegueWithIdentifier("loginSuccessSegue", sender: self)
+                    })
+                    
+                }
             }
         }
+    }
+    
+    func loginFacebook(user_id:String, third_party_id:String, token:String ) {
+        NSUserDefaults.standardUserDefaults().setObject(user_id, forKey: "userID")
+        NSUserDefaults.standardUserDefaults().setObject(third_party_id, forKey: "userPassword")
         
-        let task = session.dataTaskWithRequest(request, completionHandler: ch)
+        Alamofire.request(.POST, appDelegate.host + "/loginFB", parameters: ["user_id": user_id, "third_party_id":third_party_id, "token": token])
+        .validate().responseJSON { (res) in
+            if let d = res.result.value {
+                if (self.appDelegate.connect() && d["token"] != nil && d["mealsShared"] != nil && d["mealsSaved"] != nil) {
+                    NSUserDefaults.standardUserDefaults().setObject(d["token"], forKey: "authToken")
+                    NSUserDefaults.standardUserDefaults().setObject(d["mealsSaved"]!!.description, forKey: "mealsSaved")
+                    NSUserDefaults.standardUserDefaults().setObject(d["mealsShared"]!!.description, forKey: "mealsShared")
+                    NSOperationQueue.mainQueue().addOperationWithBlock({
+                        LoadingOverlay.shared.hideOverlayView()
+                        self.performSegueWithIdentifier("loginSuccessSegue", sender: self)
+                    })
+                }
+            }
+        }
+    }
+    
+    func loginGoogle(access_token:String, token:String, email:String) {
+        var user = email.componentsSeparatedByString("@")[0]
+        NSUserDefaults.standardUserDefaults().setObject(user, forKey: "userID")
+        NSUserDefaults.standardUserDefaults().setObject(access_token, forKey: "userPassword")
         
-        task.resume();
+        Alamofire.request(.POST, appDelegate.host + "/loginGG", parameters: ["access_token": access_token, "token": token, "email": email])
+            .validate().responseJSON { (res) in
+                if let d = res.result.value {
+                    if (self.appDelegate.connect() && d["token"] != nil && d["mealsShared"] != nil && d["mealsSaved"] != nil) {
+                        NSUserDefaults.standardUserDefaults().setObject(d["token"], forKey: "authToken")
+                        NSUserDefaults.standardUserDefaults().setObject(d["mealsSaved"]!!.description, forKey: "mealsSaved")
+                        NSUserDefaults.standardUserDefaults().setObject(d["mealsShared"]!!.description, forKey: "mealsShared")
+                        NSOperationQueue.mainQueue().addOperationWithBlock({
+                            LoadingOverlay.shared.hideOverlayView()
+                            self.performSegueWithIdentifier("loginSuccessSegue", sender: self)
+                        })
+                    }
+                }
+        }
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {

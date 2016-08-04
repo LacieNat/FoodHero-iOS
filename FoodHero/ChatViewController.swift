@@ -106,7 +106,10 @@ class ChatViewController: SLKTextViewController, XMPPRoomDelegate, XMPPPubSubDel
         }
     }
     
-
+    func xmppPubSub(sender: XMPPPubSub!, didSubscribeToNode node: String!, withResult iq: XMPPIQ!) {
+        appDelegate.enableNotif(node)
+    }
+    
     
     func xmppPubSub(sender: XMPPPubSub!, didReceiveMessage message: XMPPMessage!) {
         print (message)

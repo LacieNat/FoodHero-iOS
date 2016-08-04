@@ -48,6 +48,7 @@
 		47810FDA1D30E01500FBF943 /* RecentChatsTableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47810FD91D30E01500FBF943 /* RecentChatsTableController.swift */; };
 		47BA5C681D2646D600587B91 /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BA5C671D2646D600587B91 /* MessageTableViewCell.swift */; };
 		47BA5C6B1D27863600587B91 /* ChatArchive.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 47BA5C691D27863600587B91 /* ChatArchive.xcdatamodeld */; };
+		47EBE71B1D5251E70016F9E2 /* LoadingOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47EBE71A1D5251E70016F9E2 /* LoadingOverlay.swift */; };
 		C84F7EFBB942F95F91713EFA /* Pods_FoodHero.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6804DE4CC4D774A6BA471050 /* Pods_FoodHero.framework */; };
 		E10E3E627D1BE47BB73DE4F6 /* Pods_FoodHeroUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D7BEB907359250949D37532 /* Pods_FoodHeroUITests.framework */; };
 /* End PBXBuildFile section */
@@ -118,6 +119,7 @@
 		47810FD91D30E01500FBF943 /* RecentChatsTableController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecentChatsTableController.swift; sourceTree = "<group>"; };
 		47BA5C671D2646D600587B91 /* MessageTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
 		47BA5C6A1D27863600587B91 /* ChatArchive.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ChatArchive.xcdatamodel; sourceTree = "<group>"; };
+		47EBE71A1D5251E70016F9E2 /* LoadingOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingOverlay.swift; sourceTree = "<group>"; };
 		5EDE3268127B324F9F1DDCAD /* Pods-FoodHeroTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FoodHeroTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FoodHeroTests/Pods-FoodHeroTests.debug.xcconfig"; sourceTree = "<group>"; };
 		6804DE4CC4D774A6BA471050 /* Pods_FoodHero.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FoodHero.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D7BEB907359250949D37532 /* Pods_FoodHeroUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FoodHeroUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -234,6 +236,7 @@
 				47810FD71D30CC8800FBF943 /* ChatsTableViewCell.swift */,
 				47810FD91D30E01500FBF943 /* RecentChatsTableController.swift */,
 				475E8ECD1D324F5E007CE8EA /* PhotoCollectionViewCell.swift */,
+				47EBE71A1D5251E70016F9E2 /* LoadingOverlay.swift */,
 			);
 			path = FoodHero;
 			sourceTree = "<group>";
@@ -561,6 +564,7 @@
 				473AA1D81D158004002E3D6B /* ShareFoodGalleryView.swift in Sources */,
 				47810FDA1D30E01500FBF943 /* RecentChatsTableController.swift in Sources */,
 				476DD9991D19037A00B6D2CA /* ServingsDetail.swift in Sources */,
+				47EBE71B1D5251E70016F9E2 /* LoadingOverlay.swift in Sources */,
 				470213A01D242761008D75BD /* FoodEventDetail.swift in Sources */,
 				470514E11D033A2500E2DB5A /* RegisterController.swift in Sources */,
 				477D4AAD1CF078310005638F /* GGAuthUtil.swift in Sources */,

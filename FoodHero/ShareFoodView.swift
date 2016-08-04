@@ -272,8 +272,6 @@ class ShareFoodView: UITableViewController, UINavigationControllerDelegate, XMPP
         x.createNode(roomTitle.text, withOptions: ["pubsub#deliver_notifications":"1", "pubsub#deliver_payloads":"1","pubsub#persist_items":"1", "pubsub#notify_sub": "1", "pubsub#notify_delete": "1", "pubsub#publish_model": "subscribers"])
         
         
-        
-        
         let room = XMPPRoom(roomStorage: roomMemory, jid: roomJID, dispatchQueue: dispatch_get_main_queue())
         room.activate(appDelegate.xmppStream)
         room.addDelegate(self, delegateQueue: dispatch_get_main_queue())

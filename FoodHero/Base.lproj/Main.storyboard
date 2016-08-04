@@ -742,20 +742,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C8I-7D-tXU" customClass="FBSDKLoginButton">
-                                <rect key="frame" x="206" y="133" width="189" height="30"/>
+                                <rect key="frame" x="206" y="330" width="189" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="189" id="my5-nW-4gb"/>
                                 </constraints>
                                 <state key="normal" title="Button"/>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UF1-cd-5u4">
-                                <rect key="frame" x="211" y="414" width="184" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cFU-sJ-yNB" customClass="GIDSignInButton">
-                                <rect key="frame" x="203" y="96" width="194" height="29"/>
+                                <rect key="frame" x="203" y="293" width="194" height="29"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="29" id="Xq9-aR-jo4"/>
@@ -763,35 +757,31 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8P4-t5-fNU">
-                                <rect key="frame" x="272" y="443" width="57" height="30"/>
+                                <rect key="frame" x="272" y="512" width="57" height="30"/>
                                 <state key="normal" title="Register"/>
                                 <connections>
                                     <segue destination="p4B-HI-Aol" kind="show" id="nyS-Lw-GLa"/>
                                 </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ofN-di-aY2">
-                                <rect key="frame" x="211" y="285" width="186" height="30"/>
+                                <rect key="frame" x="211" y="397" width="186" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ruu-Pd-t6s">
-                                <rect key="frame" x="211" y="323" width="186" height="30"/>
+                                <rect key="frame" x="211" y="435" width="186" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ayv-ys-6t7">
-                                <rect key="frame" x="281" y="361" width="38" height="30"/>
+                                <rect key="frame" x="281" y="480" width="38" height="30"/>
                                 <state key="normal" title="Login"/>
                                 <connections>
                                     <action selector="login:" destination="uQn-4F-MZE" eventType="touchUpInside" id="ecG-WK-lsw"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gy0-Li-oBZ">
-                                <rect key="frame" x="252" y="171" width="105" height="99"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="99" id="C3x-wp-276"/>
-                                    <constraint firstAttribute="width" constant="105" id="kJZ-Q0-4W6"/>
-                                </constraints>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="logo2" translatesAutoresizingMaskIntoConstraints="NO" id="QEN-uJ-sD9">
+                                <rect key="frame" x="240" y="103" width="128" height="128"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -802,15 +792,13 @@
                             <constraint firstItem="8P4-t5-fNU" firstAttribute="centerX" secondItem="FqH-Q3-NsR" secondAttribute="centerX" id="Qad-Tv-ag9"/>
                             <constraint firstItem="C8I-7D-tXU" firstAttribute="top" secondItem="cFU-sJ-yNB" secondAttribute="bottom" constant="8" id="dc9-Is-PHY"/>
                             <constraint firstItem="cFU-sJ-yNB" firstAttribute="centerX" secondItem="FqH-Q3-NsR" secondAttribute="centerX" id="gaX-3R-uMr"/>
-                            <constraint firstItem="UF1-cd-5u4" firstAttribute="centerX" secondItem="FqH-Q3-NsR" secondAttribute="centerX" id="vWn-vR-fZE"/>
+                            <constraint firstItem="QEN-uJ-sD9" firstAttribute="centerX" secondItem="FqH-Q3-NsR" secondAttribute="centerX" id="gkS-XI-MbL"/>
                             <constraint firstItem="ruu-Pd-t6s" firstAttribute="centerX" secondItem="FqH-Q3-NsR" secondAttribute="centerX" id="wty-06-vmn"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="btnFacebook" destination="C8I-7D-tXU" id="AVF-Fc-tqa"/>
                         <outlet property="btnGoogle" destination="cFU-sJ-yNB" id="8aU-Gn-GYQ"/>
-                        <outlet property="ivUserProfileImage" destination="gy0-Li-oBZ" id="mNV-De-gxX"/>
-                        <outlet property="lblName" destination="UF1-cd-5u4" id="WLa-oY-sPH"/>
                         <outlet property="loginTextField" destination="ofN-di-aY2" id="SRQ-vr-coJ"/>
                         <outlet property="passwordTextField" destination="ruu-Pd-t6s" id="7Qb-oW-WFz"/>
                         <segue destination="49e-Tb-3d3" kind="presentation" identifier="loginSuccessSegue" id="Xob-P2-e2g"/>
@@ -1092,6 +1080,7 @@
     </scenes>
     <resources>
         <image name="first" width="30" height="30"/>
+        <image name="logo2" width="528" height="528"/>
         <image name="second" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
