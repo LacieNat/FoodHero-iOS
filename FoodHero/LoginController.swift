@@ -28,6 +28,9 @@ class LoginController:UIViewController, FBSDKLoginButtonDelegate, GIDSignInDeleg
         configureFacebook()
         configureGoogle()
         
+        if(FBSDKAccessToken.currentAccessToken() != nil) {
+            loginWithDefaults()
+        }
         
     }
     
@@ -98,7 +101,7 @@ class LoginController:UIViewController, FBSDKLoginButtonDelegate, GIDSignInDeleg
     
     @IBAction func login(sender: AnyObject) {
         LoadingOverlay.shared.showOverlay(self.view)
-        
+        NSUserDefaults.standardUserDefaults().setObject("internal", forKey: "loginMethod")
         NSUserDefaults.standardUserDefaults().setObject(loginTextField.text!, forKey: "userID")
         NSUserDefaults.standardUserDefaults().setObject(passwordTextField.text!, forKey: "userPassword")
         
@@ -119,7 +122,31 @@ class LoginController:UIViewController, FBSDKLoginButtonDelegate, GIDSignInDeleg
         }
     }
     
+    func loginWithDefaults() {
+        LoadingOverlay.shared.showOverlay(self.view)
+        
+        let u = NSUserDefaults.standardUserDefaults().objectForKey("userID") as! String
+        let p = NSUserDefaults.standardUserDefaults().objectForKey("userPassword") as! String
+        
+        Alamofire.request(.POST, appDelegate.host + "/login", parameters: ["username": u, "password": p])
+            .validate().responseJSON { (res) in
+                if let json = res.result.value {
+                    if self.appDelegate.connect() && json["token"] != nil && json["mealsShared"] != nil && json["mealsSaved"] != nil{
+                        NSUserDefaults.standardUserDefaults().setObject(json["token"], forKey: "authToken")
+                        NSUserDefaults.standardUserDefaults().setObject(json["mealsSaved"]!!.description, forKey: "mealsSaved")
+                        NSUserDefaults.standardUserDefaults().setObject(json["mealsShared"]!!.description, forKey: "mealsShared")
+                        NSOperationQueue.mainQueue().addOperationWithBlock({
+                            LoadingOverlay.shared.hideOverlayView()
+                            self.performSegueWithIdentifier("loginSuccessSegue", sender: self)
+                        })
+                        
+                    }
+                }
+        }
+    }
+    
     func loginFacebook(user_id:String, third_party_id:String, token:String ) {
+        NSUserDefaults.standardUserDefaults().setObject("facebook", forKey: "loginMethod")
         NSUserDefaults.standardUserDefaults().setObject(user_id, forKey: "userID")
         NSUserDefaults.standardUserDefaults().setObject(third_party_id, forKey: "userPassword")
         
@@ -141,6 +168,7 @@ class LoginController:UIViewController, FBSDKLoginButtonDelegate, GIDSignInDeleg
     
     func loginGoogle(access_token:String, token:String, email:String) {
         var user = email.componentsSeparatedByString("@")[0]
+        NSUserDefaults.standardUserDefaults().setObject("google", forKey: "loginMethod")
         NSUserDefaults.standardUserDefaults().setObject(user, forKey: "userID")
         NSUserDefaults.standardUserDefaults().setObject(access_token, forKey: "userPassword")
         

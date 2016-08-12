@@ -19,6 +19,11 @@ class FoodEventDetail:UITableViewController{
     @IBOutlet weak var additionalInfo: UILabel!
     @IBOutlet weak var imgScrollView: UIScrollView!
     
+    @IBOutlet weak var foodtypeLbl: UILabel!
+    @IBOutlet weak var portionLbl: UILabel!
+    @IBOutlet weak var timerLbl: UILabel!
+    
+    
     var userData:AnyObject!
     var appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     var foodImages = [NSData]()
@@ -43,6 +48,10 @@ class FoodEventDetail:UITableViewController{
         user.text = userData["username"] as! String
         location.text = userData["location"] as! String
         additionalInfo.text = userData["additionalInfo"] as! String
+        
+        foodtypeLbl.text = userData["foodtype"] as! String
+        portionLbl.text = userData["servings"] as! String
+        
         imgScrollView.delegate = self
 
         

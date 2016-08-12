@@ -18,6 +18,7 @@ class ShareFoodView: UITableViewController, UINavigationControllerDelegate, XMPP
     let dateFormatter = NSDateFormatter()
     let sqlDateFormatter = NSDateFormatter()
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    let geoCoder = CLGeocoder()
     
     var isEditingTime = false
     var geo = [String:Float]()
@@ -34,7 +35,7 @@ class ShareFoodView: UITableViewController, UINavigationControllerDelegate, XMPP
     }
     
     var selectedImages = [UIImage]()
-    
+    var locationCoord:CLLocation? = nil
     
     @IBOutlet weak var timePicker: UIDatePicker!
     @IBOutlet weak var timeLabel: UILabel!
@@ -43,7 +44,8 @@ class ShareFoodView: UITableViewController, UINavigationControllerDelegate, XMPP
     @IBOutlet weak var additionalInfo: UILabel!
     @IBOutlet weak var roomTitle: UITextField!
     @IBOutlet weak var location: UITextField!
-    @IBOutlet weak var unit: UITextField!
+    @IBOutlet weak var contact: UITextField!
+
     @IBOutlet weak var cview: UICollectionView!
     
     override func viewDidLoad() {
@@ -254,29 +256,33 @@ class ShareFoodView: UITableViewController, UINavigationControllerDelegate, XMPP
         }
         
         //LOCATION CHECK
-        geo = geoCodeUsingAddress(location.text!)
-        if geo["latitude"] == nil || geo["longitude"] == nil {
-            let alert = UIAlertController(title: "Form Submit Failed", message:"Invalid Address. Check if you have proper internet connection", preferredStyle: .Alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .Default) { _ in })
-            self.presentViewController(alert, animated: true){}
-            return
+        geoCoder.geocodeAddressString(location.text!, inRegion: nil) { (placemarks, err) in
+            if (err != nil) {
+                let alert = UIAlertController(title: "Form Submit Failed", message:"Invalid Address. Check if you have proper internet connection", preferredStyle: .Alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .Default) { _ in })
+                self.presentViewController(alert, animated: true){}
+                return
+            }
+            
+            if let pm = placemarks?.last {
+                self.locationCoord = pm.location
+                //TODO: GET UNIQUE ROOM NAME
+                let roomMemory = XMPPRoomMemoryStorage()
+                let roomJID = XMPPJID.jidWithString(self.getRoomIdName() + "@conference.foodhero.me")
+                
+                let x = XMPPPubSub.init(serviceJID: XMPPJID.jidWithString("pubsub.foodhero.me"), dispatchQueue: dispatch_get_main_queue())
+                x.addDelegate(self, delegateQueue: dispatch_get_main_queue())
+                x.activate(self.appDelegate.xmppStream)
+                x.createNode(self.roomTitle.text, withOptions: ["pubsub#deliver_notifications":"1", "pubsub#deliver_payloads":"1","pubsub#persist_items":"1", "pubsub#notify_sub": "1", "pubsub#notify_delete": "1", "pubsub#publish_model": "subscribers"])
+                
+                
+                let room = XMPPRoom(roomStorage: roomMemory, jid: roomJID, dispatchQueue: dispatch_get_main_queue())
+                room.activate(self.appDelegate.xmppStream)
+                room.addDelegate(self, delegateQueue: dispatch_get_main_queue())
+                room.joinRoomUsingNickname(self.appDelegate.xmppStream.myJID.user, history: nil)
+
+            }
         }
-        
-        //TODO: GET UNIQUE ROOM NAME
-        let roomMemory = XMPPRoomMemoryStorage()
-        let roomJID = XMPPJID.jidWithString(roomTitle.text! + "@conference.foodhero.me")
-        
-        let x = XMPPPubSub.init(serviceJID: XMPPJID.jidWithString("pubsub.foodhero.me"), dispatchQueue: dispatch_get_main_queue())
-        x.addDelegate(self, delegateQueue: dispatch_get_main_queue())
-        x.activate(appDelegate.xmppStream)
-        x.createNode(roomTitle.text, withOptions: ["pubsub#deliver_notifications":"1", "pubsub#deliver_payloads":"1","pubsub#persist_items":"1", "pubsub#notify_sub": "1", "pubsub#notify_delete": "1", "pubsub#publish_model": "subscribers"])
-        
-        
-        let room = XMPPRoom(roomStorage: roomMemory, jid: roomJID, dispatchQueue: dispatch_get_main_queue())
-        room.activate(appDelegate.xmppStream)
-        room.addDelegate(self, delegateQueue: dispatch_get_main_queue())
-        room.joinRoomUsingNickname(appDelegate.xmppStream.myJID.user, history: nil)
-        
         
     }
     
@@ -311,34 +317,40 @@ class ShareFoodView: UITableViewController, UINavigationControllerDelegate, XMPP
         return JSON(dic).rawString(NSUTF8StringEncoding, options: NSJSONWritingOptions(rawValue: 0))!
     }
     
-    func geoCodeUsingAddress(address: NSString) -> Dictionary<String,Float> {
-        print(address)
-        let baseUrl = "https://maps.googleapis.com/maps/api/geocode/json?"
-        let apiKey = "AIzaSyBtpYd22OGpLvLxzoH8TeZf673zJhMKVx8"
-        
-        let urlEscaped = ("\(baseUrl)address=\(address) " + getUserCountry() + "&key=\(apiKey)").stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
-        let url = NSURL(string: urlEscaped!)
-        print (url)
-        let data = NSData(contentsOfURL: url!)
-        
-        //TODO:check for wifi/internet connections. If not this will produce found nil error
-        let json = try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments) as! NSDictionary
-        
-        if let result = json["results"] as? NSArray {
-            if result.count != 0 {
-                 if let geometry = result[0]["geometry"] as? NSDictionary {
-                    if let location = geometry["location"] as? NSDictionary {
-                        let latitude = location["lat"] as! Float
-                        let longitude = location["lng"] as! Float
-                        return ["latitude":latitude, "longitude":longitude]
-                    }
-                }
-            }
-        }
-        
-        
-        return [String:Float]()
-    }
+//    func geoCodeUsingAddress(address: NSString) -> Dictionary<String,Float> {
+//        print(address)
+//        let baseUrl = "https://maps.googleapis.com/maps/api/geocode/json?"
+//        let apiKey = "AIzaSyBtpYd22OGpLvLxzoH8TeZf673zJhMKVx8"
+//        
+//        let urlEscaped = ("\(baseUrl)address=\(address) " + getUserCountry() + "&key=\(apiKey)").stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
+//        let url = NSURL(string: urlEscaped!)
+//        print (url)
+//        let data = NSData(contentsOfURL: url!)
+//        
+//        //TODO:check for wifi/internet connections. If not this will produce found nil error
+//        let json = try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments) as! NSDictionary
+//        
+//        if let result = json["results"] as? NSArray {
+//            if result.count != 0 {
+//                 if let geometry = result[0]["geometry"] as? NSDictionary {
+//                    if let location = geometry["location"] as? NSDictionary {
+//                        let latitude = location["lat"] as! Float
+//                        let longitude = location["lng"] as! Float
+//                        return ["latitude":latitude, "longitude":longitude]
+//                    }
+//                }
+//            }
+//        }
+//        
+//        geoCoder.geocodeAddressString(address as String, inRegion: nil) { (placemarks, err) in
+//            if let pm = placemarks?.last {
+//                
+//            }
+//        }
+//        
+//        
+//        return [String:Float]()
+//    }
     
     func getUserCountry()->String {
         let locale = NSLocale.currentLocale()
@@ -349,6 +361,10 @@ class ShareFoodView: UITableViewController, UINavigationControllerDelegate, XMPP
         return ""
     }
     
+    func getRoomIdName() -> String {
+        return NSUserDefaults.standardUserDefaults().stringForKey("userID")! + "room" + String(Int(NSUserDefaults.standardUserDefaults().stringForKey("mealsShared")!)!+1)
+    }
+    
     //MARK: Xmpp Delegate Methods
     func xmppRoomDidCreate(sender: XMPPRoom!) {
         sender.fetchConfigurationForm()
@@ -356,10 +372,12 @@ class ShareFoodView: UITableViewController, UINavigationControllerDelegate, XMPP
         let params = ["username": NSUserDefaults.standardUserDefaults().stringForKey("userID")!,
                       "roomname": roomTitle.text!,
                       "additionalInfo": additionalInfo.text!,
-                      "longitude": (geo["longitude"]?.description)!,
-                      "latitude": (geo["latitude"]?.description)!,
+                      "longitude": (self.locationCoord?.coordinate.longitude.description)!,
+                      "latitude": (self.locationCoord?.coordinate.latitude.description)!,
                       "foodtype": foodTypeLabel.text!,
-                      "location": location.text! + " " + unit.text!,
+                      "location": location.text!,
+                      "contact": contact.text!,
+                      "idname": getRoomIdName(),
                       "endtime": sqlDateFormatter.stringFromDate(timePicker.date)] as Dictionary<String, String>
         
         Alamofire.upload(.POST, NSURL(string: appDelegate.host + "/post-events")!, multipartFormData: { (multipartFormData) in

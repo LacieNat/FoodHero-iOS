@@ -86,7 +86,7 @@ class ChatViewController: SLKTextViewController, XMPPRoomDelegate, XMPPPubSubDel
     
     func joinRoom() {
         
-        if let roomname = roomData["roomname"] as? String {
+        if let roomname = roomData["idname"] as? String {
 
             let roomMemory = XMPPRoomMemoryStorage()
             let roomJID = XMPPJID.jidWithString(roomname+"@conference.foodhero.me")

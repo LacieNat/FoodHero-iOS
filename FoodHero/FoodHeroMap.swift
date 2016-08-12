@@ -16,6 +16,7 @@ class FoodHeroMap: UIViewController, CLLocationManagerDelegate, GMSMapViewDelega
     
     
     let locationManager = CLLocationManager()
+    let geoCoder = CLGeocoder()
     let coordinateOffset = 0.00005
     let dateFormatter = NSDateFormatter()
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -194,6 +195,19 @@ class FoodHeroMap: UIViewController, CLLocationManagerDelegate, GMSMapViewDelega
         if segue.identifier == "showFoodEventDetailSegue" {
             let c = segue.destinationViewController as! FoodEventDetail
             c.userData = selectedMarker
+        }
+        
+        else if segue.identifier == "shareFoodSegue" {
+            if(self.locationManager.location != nil) {
+                geoCoder.reverseGeocodeLocation(self.locationManager.location!, completionHandler: { (placemarks, err) in
+                    if let pm = placemarks?.last {
+                        let nc = segue.destinationViewController as! UINavigationController
+                        let c = nc.childViewControllers.last as! ShareFoodView
+                        c.location.text = "\(pm.subThoroughfare!), \(pm.thoroughfare!), \(pm.locality!), \(pm.administrativeArea!)"
+                    }
+                    
+                })
+            }
         }
     }
     
